@@ -1,4 +1,4 @@
-package com.kev.chatsample
+package com.kev.chatsample.config
 
 import com.mongodb.client.MongoClients
 import org.springframework.context.annotation.Bean
