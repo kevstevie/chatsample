@@ -22,7 +22,10 @@ class ChatController(
     }
 
     @GetMapping("/chat/{chatRoomId}")
-    fun getChats(@PathVariable chatRoomId: Long, @RequestParam(defaultValue = "default") lastId: String): List<Chat> {
+    fun getChats(
+        @PathVariable chatRoomId: Long,
+        @RequestParam(defaultValue = Double.MAX_VALUE.toString()) lastId: String
+    ): List<Chat> {
         return chatService.getChats(chatRoomId, lastId)
     }
 }
