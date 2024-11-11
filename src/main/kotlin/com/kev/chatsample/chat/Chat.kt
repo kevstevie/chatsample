@@ -1,13 +1,11 @@
 package com.kev.chatsample.chat
 
-import com.kev.chatsample.util.customFormat
 import jakarta.persistence.Id
-import java.time.LocalDateTime
 
 class Chat(
 
     @Id
-    val id: String = LocalDateTime.now().customFormat(),
+    var id: String = "",
     val senderId: Long,
     val content: String,
 ) {
