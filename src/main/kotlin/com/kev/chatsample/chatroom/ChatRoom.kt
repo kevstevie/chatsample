@@ -1,4 +1,4 @@
-package com.kev.chatsample
+package com.kev.chatsample.chatroom
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
