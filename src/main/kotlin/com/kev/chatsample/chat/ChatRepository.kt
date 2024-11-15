@@ -8,8 +8,8 @@ class ChatRepository(
     private val chatPersistenceRepository: ChatPersistenceRepository
 ) {
 
-    fun save(chat: Chat, chatRoomId: Long) {
-        chatBufferRepository.save(chat, chatRoomId)
+    fun save(chat: Chat) {
+        chatBufferRepository.save(chat)
     }
 
     fun findByChatRoomId(chatRoomId: Long, lastId: String): List<Chat> {
@@ -19,5 +19,13 @@ class ChatRepository(
             }
             return it
         }
+    }
+
+    fun flush() {
+        val chats = chatBufferRepository.getAllBufferedChat()
+        val lastId = chats.last().id
+
+        chatPersistenceRepository.saveAll(chats)
+        chatBufferRepository.deleteLowerIds(lastId)
     }
 }
