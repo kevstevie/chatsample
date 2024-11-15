@@ -1,35 +1,20 @@
 package com.kev.chatsample.chat
 
-import org.springframework.data.domain.Sort
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Criteria
-import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Component
 
 @Component
-class ChatPersistenceRepository(private val mongoTemplate: MongoTemplate) {
+interface ChatPersistenceRepository : CrudRepository<Chat, String> {
 
-    fun save(chats: List<Chat>, chatRoomId: Long) {
-        mongoTemplate.insert(chats, "chatroom_$chatRoomId")
-    }
-
-    fun findByChatRoomId(chatRoomId: Long, lastId: String): List<Chat> {
-        val query = Query().addCriteria(lastIdCriteria(lastId))
-            .with(Sort.by(Sort.Direction.DESC, "id"))
-            .limit(20)
-
-        return mongoTemplate.find(
-            query,
-            Chat::class.java,
-            "chatroom_$chatRoomId"
-        )
-    }
-
-    private fun lastIdCriteria(lastId: String): Criteria {
-        return if (lastId == "default") {
-            Criteria()
-        } else {
-            Criteria.where("id").lt(lastId)
-        }
-    }
+    @Query(
+        """
+            select c from Chat c
+            where c.chatRoomId = :chatRoomId
+            and c.id < :lastId
+            order by c.id desc
+            limit 20
+        """
+    )
+    fun findByChatRoomId(chatRoomId: Long, lastId: String): List<Chat>
 }

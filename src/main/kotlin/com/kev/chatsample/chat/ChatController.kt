@@ -13,7 +13,7 @@ class ChatController(
 
     @MessageMapping("/chat/{chatRoomId}")
     fun chat(@DestinationVariable chatRoomId: Long, @RequestBody chatDto: ChatDto) {
-        val chat = Chat(senderId = chatDto.senderId, content = chatDto.content)
+        val chat = Chat(senderId = chatDto.senderId, chatRoomId = chatRoomId, content = chatDto.content)
         redisChatPublisher.publish(chatDto)
         chatService.save(chat, chatRoomId)
     }
